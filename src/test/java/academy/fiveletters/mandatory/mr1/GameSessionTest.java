@@ -20,7 +20,8 @@ class GameSessionTest {
     void newSessionHasExpectedInitialState() {
         List<String> dictionary = List.of("озеро", "арбуз", "школа");
 
-        GameSession session = GameService.startGame(dictionary, 6, 42L);
+        GameService gameService = new GameService();
+        GameSession session = gameService.startGame(dictionary, 6, 42L);
 
         assertTrue(dictionary.contains(session.getAnswer()));
         assertEquals(6, session.getMaxAttempts());
@@ -34,7 +35,10 @@ class GameSessionTest {
     void nonPositiveMaxAttemptsIsRejected() {
         List<String> dictionary = List.of("озеро");
 
-        assertThrows(IllegalArgumentException.class, () -> GameService.startGame(dictionary, 0, 42L));
-        assertThrows(IllegalArgumentException.class, () -> GameService.startGame(dictionary, -1, 42L));
+        GameService gameService1 = new GameService();
+        GameService gameService2 = new GameService();
+
+        assertThrows(IllegalArgumentException.class, () -> gameService1.startGame(dictionary, 0, 42L));
+        assertThrows(IllegalArgumentException.class, () -> gameService2.startGame(dictionary, -1, 42L));
     }
 }

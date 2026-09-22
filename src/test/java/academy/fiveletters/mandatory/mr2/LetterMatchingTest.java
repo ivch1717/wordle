@@ -1,8 +1,11 @@
 package academy.fiveletters.mandatory.mr2;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import org.junit.jupiter.api.Disabled;
+import academy.fiveletters.GameService;
+import academy.fiveletters.GameSession;
+import academy.fiveletters.LetterStatus;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -11,30 +14,80 @@ import org.junit.jupiter.api.Test;
 class LetterMatchingTest {
 
     @Test
-    @Disabled("MR2: реализуй тест и удали эту строку")
     @DisplayName("Базовый случай: загадано \"озеро\", ввод \"арбуз\" -> ❌🟡❌❌🟡")
     void basicCase() {
-        fail("Тест не реализован");
+        GameService service = createService(List.of("озеро", "арбуз"));
+        GameSession session = new GameSession("озеро", 6);
+
+        var result = service.applyGuess(session, "арбуз");
+
+        assertEquals(
+                List.of(
+                        LetterStatus.ABSENT,
+                        LetterStatus.PRESENT,
+                        LetterStatus.ABSENT,
+                        LetterStatus.ABSENT,
+                        LetterStatus.PRESENT),
+                result.letterStatuses());
     }
 
     @Test
-    @Disabled("MR2: реализуй тест и удали эту строку")
     @DisplayName("Полное совпадение: загадано \"озеро\", ввод \"озеро\" -> ✅✅✅✅✅")
     void exactMatch() {
-        fail("Тест не реализован");
+        GameService service = createService(List.of("озеро"));
+        GameSession session = new GameSession("озеро", 6);
+
+        var result = service.applyGuess(session, "озеро");
+
+        assertEquals(
+                List.of(
+                        LetterStatus.CORRECT,
+                        LetterStatus.CORRECT,
+                        LetterStatus.CORRECT,
+                        LetterStatus.CORRECT,
+                        LetterStatus.CORRECT),
+                result.letterStatuses());
     }
 
     @Test
-    @Disabled("MR2: реализуй тест и удали эту строку")
     @DisplayName("Повторяющиеся буквы: загадано \"сорок\", ввод \"оооом\" -> ❌✅❌✅❌")
     void repeatedLettersAreNotDoubleCounted() {
-        fail("Тест не реализован");
+        GameService service = createService(List.of("сорок", "оооом"));
+        GameSession session = new GameSession("сорок", 6);
+
+        var result = service.applyGuess(session, "оооом");
+
+        assertEquals(
+                List.of(
+                        LetterStatus.ABSENT,
+                        LetterStatus.CORRECT,
+                        LetterStatus.ABSENT,
+                        LetterStatus.CORRECT,
+                        LetterStatus.ABSENT),
+                result.letterStatuses());
     }
 
     @Test
-    @Disabled("MR2: реализуй тест и удали эту строку")
     @DisplayName("Ни одна буква не подошла: все позиции ❌")
     void noMatchingLetters() {
-        fail("Тест не реализован");
+        GameService service = createService(List.of("озеро", "тыква"));
+        GameSession session = new GameSession("озеро", 6);
+
+        var result = service.applyGuess(session, "тыква");
+
+        assertEquals(
+                List.of(
+                        LetterStatus.ABSENT,
+                        LetterStatus.ABSENT,
+                        LetterStatus.ABSENT,
+                        LetterStatus.ABSENT,
+                        LetterStatus.ABSENT),
+                result.letterStatuses());
+    }
+
+    private static GameService createService(List<String> dictionary) {
+        GameService service = new GameService();
+        service.startGame(dictionary, 6, 42L);
+        return service;
     }
 }

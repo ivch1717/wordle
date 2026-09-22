@@ -40,6 +40,8 @@ class DictionaryTest {
     void emptyDictionaryIsRejected() {
         List<String> emptyDictionary = List.of();
 
-        assertThrows(IllegalArgumentException.class, () -> GameService.startGame(emptyDictionary, 6, 42L));
+        GameService gameService = new GameService();
+
+        assertThrows(IllegalArgumentException.class, () -> gameService.startGame(emptyDictionary, 6, 42L));
     }
 }

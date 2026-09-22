@@ -25,6 +25,22 @@ public final class GameSession {
         this.attemptsHistory = new ArrayList<>();
     }
 
+    void nextStep(String guess) {
+        attemptsHistory.add(guess);
+        attemptsUsed += 1;
+    }
+
+    void win() {
+        status = GameStatus.WIN;
+    }
+
+    void lose() {
+        if (attemptsUsed != maxAttempts) {
+            throw new IllegalArgumentException("ходы ещё остались");
+        }
+        status = GameStatus.LOSE;
+    }
+
     public List<String> getAttemptsHistory() {
         return List.copyOf(attemptsHistory);
     }
