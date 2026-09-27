@@ -1,8 +1,13 @@
 package academy.fiveletters.mandatory.mr1;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import org.junit.jupiter.api.Disabled;
+import academy.fiveletters.DictionaryLoader;
+import academy.fiveletters.GameService;
+import java.io.IOException;
+import java.util.List;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -11,23 +16,30 @@ import org.junit.jupiter.api.Test;
 class DictionaryTest {
 
     @Test
-    @Disabled("MR1: реализуй тест и удали эту строку")
     @DisplayName("Словарь содержит не меньше 50 слов")
-    void dictionaryContainsAtLeastFiftyWords() {
-        fail("Тест не реализован");
+    void dictionaryContainsAtLeastFiftyWords() throws IOException {
+        List<String> dictionary = DictionaryLoader.load("src/main/resources/dictionary.txt");
+
+        int len = dictionary.size();
+
+        assertTrue(len >= 50);
     }
 
     @Test
-    @Disabled("MR1: реализуй тест и удали эту строку")
     @DisplayName("Все слова словаря состоят ровно из 5 букв")
-    void allWordsAreExactlyFiveLettersLong() {
-        fail("Тест не реализован");
+    void allWordsAreExactlyFiveLettersLong() throws IOException {
+        List<String> dictionary = DictionaryLoader.load("src/main/resources/dictionary.txt");
+
+        for (String word : dictionary) {
+            assertEquals(5, word.length(), "Неверная длина слова: " + word);
+        }
     }
 
     @Test
-    @Disabled("MR1: реализуй тест и удали эту строку")
     @DisplayName("Пустой словарь приводит к ошибке, а не к запуску игры без слова")
     void emptyDictionaryIsRejected() {
-        fail("Тест не реализован");
+        List<String> emptyDictionary = List.of();
+
+        assertThrows(IllegalArgumentException.class, () -> GameService.startGame(emptyDictionary, 6, 42L));
     }
 }
