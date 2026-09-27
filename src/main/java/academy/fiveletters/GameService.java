@@ -8,22 +8,33 @@ import java.util.Map;
 import java.util.Random;
 
 public final class GameService {
-    private List<String> dictionary = List.of();
+    private List<String> dictionaryWords = List.of();
 
-    public GameSession startGame(List<String> dict, int maxAttempts, long seed) {
-        if (dict == null || dict.isEmpty()) {
+    public GameSession startGame(List<String> dictionary, int maxAttempts, long seed) {
+        return startGame(dictionary, dictionary, maxAttempts, seed);
+    }
+
+    public GameSession startGame(
+            List<String> dictionaryWords, List<String> dictionaryAnswers, int maxAttempts, long seed) {
+        if (dictionaryWords == null
+                || dictionaryWords.isEmpty()
+                || dictionaryAnswers == null
+                || dictionaryAnswers.isEmpty()) {
             throw new IllegalArgumentException("Словарь не должен быть пустым");
         }
+        if (!dictionaryWords.containsAll(dictionaryAnswers)) {
+            throw new IllegalArgumentException("Ответы должны входить в словарь допустимых слов");
+        }
         Random random = new Random(seed);
-        int index = random.nextInt(dict.size());
-        String word = dict.get(index);
-        this.dictionary = List.copyOf(dict);
+        int index = random.nextInt(dictionaryAnswers.size());
+        String word = dictionaryAnswers.get(index);
+        this.dictionaryWords = List.copyOf(dictionaryWords);
 
         return new GameSession(word, maxAttempts);
     }
 
     private boolean isWordInDictionary(String word) {
-        return dictionary.contains(word);
+        return dictionaryWords.contains(word);
     }
 
     private void correctnessCheck(GameSession session, String guess) {
@@ -40,7 +51,7 @@ public final class GameService {
             }
         }
 
-        if (dictionary.isEmpty() || !isWordInDictionary(guess)) {
+        if (dictionaryWords.isEmpty() || !isWordInDictionary(guess)) {
             throw new IllegalArgumentException("Слова нет в словаре");
         }
 
