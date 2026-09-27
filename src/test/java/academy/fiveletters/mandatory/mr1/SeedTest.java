@@ -22,8 +22,11 @@ class SeedTest {
     void sameSeedProducesSameAnswer() throws IOException {
         List<String> dictionary = DictionaryLoader.load("src/main/resources/dictionary.txt");
 
-        GameSession game1 = GameService.startGame(dictionary, 3, 67);
-        GameSession game2 = GameService.startGame(dictionary, 3, 67);
+        GameService gameService1 = new GameService();
+        GameService gameService2 = new GameService();
+
+        GameSession game1 = gameService1.startGame(dictionary, 3, 67);
+        GameSession game2 = gameService2.startGame(dictionary, 3, 67);
 
         assertEquals(game1.getAnswer(), game2.getAnswer());
     }
@@ -34,8 +37,9 @@ class SeedTest {
         List<String> dictionary = DictionaryLoader.load("src/main/resources/dictionary.txt");
         Set<String> selectedAnswers = new HashSet<>();
 
+        GameService gameService = new GameService();
         for (long seed = 0; seed < 100; seed++) {
-            selectedAnswers.add(GameService.startGame(dictionary, 3, seed).getAnswer());
+            selectedAnswers.add(gameService.startGame(dictionary, 3, seed).getAnswer());
         }
 
         assertTrue(selectedAnswers.size() > 1, "Разные seed всегда выбирают одно и то же слово");
